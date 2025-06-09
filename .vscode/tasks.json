@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "run prototyp-1",
+			"command": "dotnet",
+			"args": [
+				"run",
+				"--project",
+				"prototyp-1/prototyp-1.csproj"
+			],
+			"group": "test",
+			"problemMatcher": [
+				"$msCompile"
+			]
+		}
+	]
+}
