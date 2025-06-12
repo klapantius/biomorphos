@@ -3,12 +3,12 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "run prototyp-1",
+			"label": "run prototype",
 			"command": "dotnet",
 			"args": [
 				"run",
 				"--project",
-				"prototypes/prototyp-1/prototyp-1.csproj"
+				"prototype/prototype.csproj"
 			],
 			"group": "test",
 			"problemMatcher": [

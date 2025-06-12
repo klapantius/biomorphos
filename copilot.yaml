@@ -14,7 +14,7 @@ project:
     - Output files should be written to the project root unless otherwise specified.
 
 subprojects:
-  - name: prototyp-1
+  - name: prototype
     purpose: >
       A minimal prototype demonstrating the core simulation logic for a cell culture automation.
       Implements a simple grid, cell state transitions, and HTML visualization of each iteration.
