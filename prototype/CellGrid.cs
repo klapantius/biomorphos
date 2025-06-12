@@ -6,11 +6,13 @@ namespace CellCultureSimulator
     {
         public readonly int Size;
         public CellState[,] Grid { get; private set; }
+        private readonly NeighborhoodTemplate _template;
 
-        public CellGrid(int size)
+        public CellGrid(int size, NeighborhoodTemplate template)
         {
             Size = size;
             Grid = new CellState[size, size];
+            _template = template;
         }
 
         public void InitializeCenterAlive()
@@ -20,7 +22,7 @@ namespace CellCultureSimulator
 
         public CellGrid NextIteration()
         {
-            var newGrid = new CellGrid(Size);
+            var newGrid = new CellGrid(Size, _template);
             Array.Copy(Grid, newGrid.Grid, Grid.Length);
 
             // Phase 1: Prepare births
@@ -66,14 +68,20 @@ namespace CellCultureSimulator
 
         private bool HasAliveNeighbor(int x, int y)
         {
-            foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
+            int center = _template.Size / 2;
+            for (int dx = 0; dx < _template.Size; dx++)
             {
-                int nx = x + dx;
-                int ny = y + dy;
-                if (nx >= 0 && nx < Size && ny >= 0 && ny < Size)
+                for (int dy = 0; dy < _template.Size; dy++)
                 {
-                    if (Grid[nx, ny] == CellState.Alive)
-                        return true;
+                    if (dx == center && dy == center) continue;
+                    if (!_template.Mask[dx, dy]) continue;
+                    int nx = x + dx - center;
+                    int ny = y + dy - center;
+                    if (nx >= 0 && nx < Size && ny >= 0 && ny < Size)
+                    {
+                        if (Grid[nx, ny] == CellState.Alive)
+                            return true;
+                    }
                 }
             }
             return false;
@@ -82,14 +90,20 @@ namespace CellCultureSimulator
         private int CountAliveNeighbors(int x, int y)
         {
             int count = 0;
-            foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
+            int center = _template.Size / 2;
+            for (int dx = 0; dx < _template.Size; dx++)
             {
-                int nx = x + dx;
-                int ny = y + dy;
-                if (nx >= 0 && nx < Size && ny >= 0 && ny < Size)
+                for (int dy = 0; dy < _template.Size; dy++)
                 {
-                    if (Grid[nx, ny] == CellState.Alive)
-                        count++;
+                    if (dx == center && dy == center) continue;
+                    if (!_template.Mask[dx, dy]) continue;
+                    int nx = x + dx - center;
+                    int ny = y + dy - center;
+                    if (nx >= 0 && nx < Size && ny >= 0 && ny < Size)
+                    {
+                        if (Grid[nx, ny] == CellState.Alive)
+                            count++;
+                    }
                 }
             }
             return count;

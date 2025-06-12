@@ -5,17 +5,19 @@ namespace CellCultureSimulator
         public int Size { get; }
         public int Iterations { get; }
         public CellGrid[] GridHistory { get; }
+        public NeighborhoodTemplate Template { get; }
 
-        public Simulation(int size, int iterations)
+        public Simulation(int size, int iterations, NeighborhoodTemplate template)
         {
             Size = size;
             Iterations = iterations;
             GridHistory = new CellGrid[iterations];
+            Template = template;
         }
 
         public void Run()
         {
-            var initialGrid = new CellGrid(Size);
+            var initialGrid = new CellGrid(Size, Template);
             initialGrid.InitializeCenterAlive();
             GridHistory[0] = initialGrid;
 
