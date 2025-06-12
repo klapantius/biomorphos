@@ -1,0 +1,40 @@
+# GitHub Copilot configuration for the biomorphos project
+
+project:
+  name: biomorphos - A Life Cycle Simulation Game
+  description: >
+    The project "biomorphos - A Life Cycle Simulation Game" models the development of simple cell cultures. The game runs through iterations where the next state of each individual cell is determined by simple neighborhood rules. After calculating the new states, they are visualized, and the next round begins. The states, properties/types of the cells, the rules, and other factors – such as the environment influencing the cells externally – are configurable.
+  requirements:
+    - All code must be compatible with .NET 6.0 or later.
+    - Use C# best practices and .NET naming conventions.
+    - Prefer clear, readable code over clever or overly compact code.
+    - Add XML documentation comments to all public methods and classes.
+    - Write unit tests for all new methods.
+    - Do not use external dependencies unless explicitly allowed.
+    - Output files should be written to the project root unless otherwise specified.
+
+subprojects:
+  - name: prototyp-1
+    purpose: >
+      A minimal prototype demonstrating the core simulation logic for a cell culture automation.
+      Implements a simple grid, cell state transitions, and HTML visualization of each iteration.
+    rules:
+      - The simulation grid must be square and configurable in size.
+      - Cell states: NonExistent, WillBeBorn, Alive, WillDie.
+      - The simulation must be reproducible given the same initial state.
+      - Generated HTML must visualize each iteration of the simulation.
+      - Only the four direct neighbors (up, down, left, right) are considered for state changes.
+      - No user interaction or external input is required.
+
+  - name: prototyp-2
+    purpose: >
+      Elaborate a basic project structure and introduce core classes for future development.
+      Focus on modularity, separation of concerns, and extensibility.
+    rules:
+      - Define separate classes for Grid, Cell, and Simulation logic.
+      - Use interfaces where appropriate to allow for future extension.
+      - Prepare the codebase for additional cell states and rules.
+      - Add basic unit tests for core classes.
+      - Maintain compatibility with the requirements of the main project.
+
+# End of copilot.yaml
