@@ -8,7 +8,7 @@
 			"args": [
 				"run",
 				"--project",
-				"prototyp-1/prototyp-1.csproj"
+				"prototypes/prototyp-1/prototyp-1.csproj"
 			],
 			"group": "test",
 			"problemMatcher": [
