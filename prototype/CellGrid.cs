@@ -7,6 +7,7 @@ namespace CellCultureSimulator
         public readonly int Size;
         public CellState[,] Grid { get; private set; }
         private readonly NeighborhoodTemplate _template;
+        private readonly ICellTransitionRule _transitionRule = new ClassicTransitionRule();
 
         public CellGrid(int size, NeighborhoodTemplate template)
         {
@@ -30,39 +31,10 @@ namespace CellCultureSimulator
             {
                 for (int y = 0; y < Size; y++)
                 {
-                    if (Grid[x, y] == CellState.NonExistent)
-                    {
-                        if (HasAliveNeighbor(x, y))
-                        {
-                            newGrid.Grid[x, y] = CellState.WillBeBorn;
-                        }
-                    }
+                    int aliveNeighbors = CountAliveNeighbors(x, y);
+                    newGrid.Grid[x, y] = _transitionRule.GetNextState(Grid[x, y], aliveNeighbors);
                 }
             }
-
-            // Phase 2: State transitions
-            for (int x = 0; x < Size; x++)
-            {
-                for (int y = 0; y < Size; y++)
-                {
-                    switch (newGrid.Grid[x, y])
-                    {
-                        case CellState.WillBeBorn:
-                            newGrid.Grid[x, y] = CellState.Alive;
-                            break;
-                        case CellState.Alive:
-                            if (CountAliveNeighbors(x, y) < 3)
-                            {
-                                newGrid.Grid[x, y] = CellState.WillDie;
-                            }
-                            break;
-                        case CellState.WillDie:
-                            newGrid.Grid[x, y] = CellState.NonExistent;
-                            break;
-                    }
-                }
-            }
-
             return newGrid;
         }
 

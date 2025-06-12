@@ -1,0 +1,2 @@
+- define the calculation behavior in case of a position is out of the CellGrid: finite, torus, cylinder
+- replace counting of alive neigbors by returning the matrix of combining the current state of neighbors and the template using a rule (e.g. logical operation)
