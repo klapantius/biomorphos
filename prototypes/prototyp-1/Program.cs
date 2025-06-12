@@ -130,19 +130,14 @@ namespace CellCultureSimulator
         }
     }
 
-    class Program
+    interface IRenderer
     {
-        const int Size = 16;
-        const int Iterations = 9;
+        void Render(CellGrid[] gridHistory, string fileName = "simulation.html");
+    }
 
-        static void Main()
-        {
-            var simulation = new Simulation(Size, Iterations);
-            simulation.Run();
-            GenerateHtmlOutput(simulation.GridHistory);
-        }
-
-        static void GenerateHtmlOutput(CellGrid[] gridHistory)
+    class HtmlRenderer : IRenderer
+    {
+        public void Render(CellGrid[] gridHistory, string fileName = "simulation.html")
         {
             var html = new StringBuilder();
             html.AppendLine("<html><head><style>");
@@ -175,7 +170,21 @@ namespace CellCultureSimulator
             }
 
             html.AppendLine("</body></html>");
-            File.WriteAllText("simulation.html", html.ToString());
+            File.WriteAllText(fileName, html.ToString());
+        }
+    }
+
+    class Program
+    {
+        const int Size = 16;
+        const int Iterations = 9;
+
+        static void Main()
+        {
+            var simulation = new Simulation(Size, Iterations);
+            simulation.Run();
+            IRenderer renderer = new HtmlRenderer();
+            renderer.Render(simulation.GridHistory);
         }
     }
 }
