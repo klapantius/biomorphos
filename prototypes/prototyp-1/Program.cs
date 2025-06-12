@@ -10,45 +10,37 @@ namespace CellCultureSimulator
         WillDie
     }
 
-    class Program
+    class CellGrid
     {
-        const int Size = 16;
-        const int Iterations = 9;
+        public readonly int Size;
+        public CellState[,] Grid { get; private set; }
 
-        static void Main()
+        public CellGrid(int size)
         {
-            var gridHistory = new CellState[Iterations][,];
-            gridHistory[0] = InitializeGrid();
-
-            for (int i = 1; i < Iterations; i++)
-            {
-                gridHistory[i] = ComputeNextIteration(gridHistory[i - 1]);
-            }
-
-            GenerateHtmlOutput(gridHistory);
+            Size = size;
+            Grid = new CellState[size, size];
         }
 
-        static CellState[,] InitializeGrid()
+        public void InitializeCenterAlive()
         {
-            var grid = new CellState[Size, Size];
-            grid[Size / 2, Size / 2] = CellState.Alive;
-            return grid;
+            Grid[Size / 2, Size / 2] = CellState.Alive;
         }
 
-        static CellState[,] ComputeNextIteration(CellState[,] previousGrid)
+        public CellGrid NextIteration()
         {
-            var newGrid = (CellState[,])previousGrid.Clone();
+            var newGrid = new CellGrid(Size);
+            Array.Copy(Grid, newGrid.Grid, Grid.Length);
 
             // Phase 1: Prepare births
             for (int x = 0; x < Size; x++)
             {
                 for (int y = 0; y < Size; y++)
                 {
-                    if (previousGrid[x, y] == CellState.NonExistent)
+                    if (Grid[x, y] == CellState.NonExistent)
                     {
-                        if (HasAliveNeighbor(x, y, previousGrid))
+                        if (HasAliveNeighbor(x, y))
                         {
-                            newGrid[x, y] = CellState.WillBeBorn;
+                            newGrid.Grid[x, y] = CellState.WillBeBorn;
                         }
                     }
                 }
@@ -59,19 +51,19 @@ namespace CellCultureSimulator
             {
                 for (int y = 0; y < Size; y++)
                 {
-                    switch (newGrid[x, y])
+                    switch (newGrid.Grid[x, y])
                     {
                         case CellState.WillBeBorn:
-                            newGrid[x, y] = CellState.Alive;
+                            newGrid.Grid[x, y] = CellState.Alive;
                             break;
                         case CellState.Alive:
-                            if (CountAliveNeighbors(x, y, previousGrid) < 3)
+                            if (CountAliveNeighbors(x, y) < 3)
                             {
-                                newGrid[x, y] = CellState.WillDie;
+                                newGrid.Grid[x, y] = CellState.WillDie;
                             }
                             break;
                         case CellState.WillDie:
-                            newGrid[x, y] = CellState.NonExistent;
+                            newGrid.Grid[x, y] = CellState.NonExistent;
                             break;
                     }
                 }
@@ -80,7 +72,7 @@ namespace CellCultureSimulator
             return newGrid;
         }
 
-        static bool HasAliveNeighbor(int x, int y, CellState[,] grid)
+        private bool HasAliveNeighbor(int x, int y)
         {
             foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
             {
@@ -88,14 +80,14 @@ namespace CellCultureSimulator
                 int ny = y + dy;
                 if (nx >= 0 && nx < Size && ny >= 0 && ny < Size)
                 {
-                    if (grid[nx, ny] == CellState.Alive)
+                    if (Grid[nx, ny] == CellState.Alive)
                         return true;
                 }
             }
             return false;
         }
 
-        static int CountAliveNeighbors(int x, int y, CellState[,] grid)
+        private int CountAliveNeighbors(int x, int y)
         {
             int count = 0;
             foreach (var (dx, dy) in new[] { (-1, 0), (1, 0), (0, -1), (0, 1) })
@@ -104,14 +96,35 @@ namespace CellCultureSimulator
                 int ny = y + dy;
                 if (nx >= 0 && nx < Size && ny >= 0 && ny < Size)
                 {
-                    if (grid[nx, ny] == CellState.Alive)
+                    if (Grid[nx, ny] == CellState.Alive)
                         count++;
                 }
             }
             return count;
         }
+    }
 
-        static void GenerateHtmlOutput(CellState[][,] gridHistory)
+    class Program
+    {
+        const int Size = 16;
+        const int Iterations = 9;
+
+        static void Main()
+        {
+            var gridHistory = new CellGrid[Iterations];
+            var initialGrid = new CellGrid(Size);
+            initialGrid.InitializeCenterAlive();
+            gridHistory[0] = initialGrid;
+
+            for (int i = 1; i < Iterations; i++)
+            {
+                gridHistory[i] = gridHistory[i - 1].NextIteration();
+            }
+
+            GenerateHtmlOutput(gridHistory);
+        }
+
+        static void GenerateHtmlOutput(CellGrid[] gridHistory)
         {
             var html = new StringBuilder();
             html.AppendLine("<html><head><style>");
@@ -119,13 +132,14 @@ namespace CellCultureSimulator
             html.AppendLine("td { width: 15px; height: 15px; border: 1px solid #ddd; }");
             html.AppendLine("</style></head><body>");
 
-            foreach (var grid in gridHistory)
+            foreach (var cellGrid in gridHistory)
             {
+                var grid = cellGrid.Grid;
                 html.AppendLine("<table class='grid'>");
-                for (int x = 0; x < Size; x++)
+                for (int x = 0; x < cellGrid.Size; x++)
                 {
                     html.AppendLine("<tr>");
-                    for (int y = 0; y < Size; y++)
+                    for (int y = 0; y < cellGrid.Size; y++)
                     {
                         var color = grid[x, y] switch
                         {
