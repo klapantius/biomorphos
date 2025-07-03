@@ -3,7 +3,15 @@
 project:
   name: biomorphos - A Life Cycle Simulation Game
   description: >
-    The project "biomorphos - A Life Cycle Simulation Game" models the development of simple cell cultures. The game runs through iterations where the next state of each individual cell is determined by simple neighborhood rules. After calculating the new states, they are visualized, and the next round begins. The states, properties/types of the cells, the rules, and other factors – such as the environment influencing the cells externally – are configurable.
+    The project "biomorphos - A Life Cycle Simulation Game" models the development of simple cell cultures.
+    The game runs through iterations where the cells evolve by interaction.
+    The states, properties/types of the cells, the rules, and other factors – such as the environment
+    influencing the cells externally – are hihgly configurable.
+    The project starts with a very simple prototype.
+    Then it starts to implement a core library with relative simple rules and interactions. In a later phase, it will be extended with more complex rules and interactions.
+    phase cells may be able to evolve and adapt to keep living. Different cells types in the same
+    environment are also imaginable.
+    In parallel to the core library, user interfaces will be developed for different platforms.
   requirements:
     - All code must be compatible with .NET 6.0 or later.
     - Use C# best practices and .NET naming conventions.
@@ -11,7 +19,7 @@ project:
     - Add XML documentation comments to all public methods and classes.
     - Write unit tests for all new methods.
     - Do not use external dependencies unless explicitly allowed.
-    - Output files should be written to the project root unless otherwise specified.
+    - Output files should be written to the output folder under the project root unless otherwise specified.
 
 subprojects:
   - name: prototype
@@ -25,16 +33,37 @@ subprojects:
       - Generated HTML must visualize each iteration of the simulation.
       - Only the four direct neighbors (up, down, left, right) are considered for state changes.
       - No user interaction or external input is required.
-
-  - name: prototyp-2
+  - name: library
     purpose: >
-      Elaborate a basic project structure and introduce core classes for future development.
-      Focus on modularity, separation of concerns, and extensibility.
+      Type definitions, core logic and calculations.
+    rules of the game:
+      - The game simulates cells like factories that transform inputs into outputs.
+      - The game is played on a grid of cells over multiple iterations.
+      - Every iteration consists of two phases:
+        1. Collecting requests and sharing outputs.
+        2. Consuming inputs and producing outputs.
+      - In opposite to the prototype, in this game there are no cell-states, but life-power.
+    types:
+      - Grid: Represents the grid of cells by describing the relations between cells.
+          A simple topology is for example a square grid or a 3D cubic grid.
+          A little more advanced topology could specify a square grid with wrap-around edges (cylinder or torus).
+          The grid should be able to provide the neighbors of a cell for calculations.
+      - Cell: A cell is a factory which turns inputs into outputs. These can be considered as materials.
+          The cell itself needs a certain amount of it's input for its life-power. The rest will be used to produce outputs.
+          All input materials must be available for the production to take place. The production will use the maximal amount
+          of materials according to a given proportion of them. The rest of materials after the production will be added
+          back to the cell's storage.
+          In each round, the cell first collects the requests from the connected cells and shares its outputs according to a given proportion.
+          Then it calls off the required amount of materials from the connected cells. After all connected cells delivered what they could,
+          the cell will produce outputs for the next iteration.
     rules:
       - Define separate classes for Grid, Cell, and Simulation logic.
       - Use interfaces where appropriate to allow for future extension.
       - Prepare the codebase for additional cell states and rules.
       - Add basic unit tests for core classes.
       - Maintain compatibility with the requirements of the main project.
+  - name: apps
+    purpose: >
+      All kinds of user interfaces, including web, desktop, and mobile applications.
 
 # End of copilot.yaml
