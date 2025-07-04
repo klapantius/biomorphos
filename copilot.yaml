@@ -33,7 +33,19 @@ subprojects:
         2. Consuming inputs and producing outputs.
       - In opposite to the prototype, in this game there are no cell-states, but life-power.
     types:
-      - Grid: Represents the grid of cells by describing the relations between cells.
+      - Grid: A logical layer combining the storage of cells and the calculation of relationships.
+          Both services will be delegated to specialized implementations.
+          The grid provides relation information about each cells of it. A grid has an own topology which
+          will be applied to the coordinates calculated for a cell as related cells.
+      - CellStorage: A storage for cells that can be queried by their coordinates.
+          It should provide methods to get, set, and remove cells. There are multiple implementations
+          of this interface depending on the topology and the requirements of the grid.
+      - Coordinates:
+          Coordinates are a generic interface to represent positions in the grid.
+          This allows for different coordinate systems to be used in different topologies.
+      - GridTopology: Describes properties of the whole grid as such, like boundaries (if any), size,
+         and dimensions. It can normalize coordinates so that they fit to the grid.
+      - RelationshipTopology: Describes the relations between cells.
           A simple topology is for example a square grid or a 3D cubic grid.
           A little more advanced topology could specify a square grid with wrap-around edges (cylinder or torus).
           The grid should be able to provide the neighbors of a cell for calculations.
