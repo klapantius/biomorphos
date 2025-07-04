@@ -7,22 +7,22 @@ namespace biomorphos.library
     /// Interface for a grid that maintains a storage of cells, a grid topology, and a relationship topology.
     /// All components use the same ICoordinates implementation.
     /// </summary>
-    public interface IGrid
+    public interface IGrid<TCoord> where TCoord : topology.ICoordinates
     {
         /// <summary>
         /// The storage for cells in the grid.
         /// </summary>
-        IStorage Storage { get; }
+        storage.IStorage<TCoord> Storage { get; }
 
         /// <summary>
         /// The topology of the grid (boundaries, normalization, etc).
         /// </summary>
-        IGridTopology GridTopology { get; }
+        topology.IGridTopology<TCoord> GridTopology { get; }
 
         /// <summary>
         /// The relationship topology (e.g., neighborhood) for cell connections.
         /// </summary>
-        IRelationshipTopology RelationshipTopology { get; }
+        topology.IRelationshipTopology<TCoord> RelationshipTopology { get; }
 
         /// <summary>
         /// An enumerable of all cells in the grid.
