@@ -8,7 +8,7 @@ namespace biomorphos.library.topology
         /// <summary>
         /// Returns the dimension count (e.g., 2 for 2D, 3 for 3D).
         /// </summary>
-        int Dimension { get; }
+        int Dimensions { get; }
 
         /// <summary>
         /// Gets the value of the coordinate at the given dimension index.
