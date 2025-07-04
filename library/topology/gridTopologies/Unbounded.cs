@@ -4,7 +4,7 @@ namespace biomorphos.library.topology.gridTopologies
     /// An infinite grid topology implementation for any number of dimensions.
     /// The Normalize method is a null-function (returns the input coordinate).
     /// </summary>
-    public class GridTopologyAnyDInfinite<TCoord> : IGridTopology<TCoord> where TCoord : ICoordinates
+    public class Unbounded<TCoord> : IGridTopology<TCoord> where TCoord : ICoordinates
     {
         public TCoord Normalize(TCoord coord)
         {

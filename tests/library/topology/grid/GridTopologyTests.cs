@@ -7,13 +7,13 @@ using NUnit.Framework;
 namespace biomorphos.library.tests.topology.grid
 {
     [TestFixture]
-    public class GridTopologyAnyDInfiniteTests
+    public class GridTopologyTests
     {
         [Test]
         public void Normalize_ReturnsInput_Unchanged()
         {
             var coord = new Cartesian(1, 2, 3);
-            var grid = new GridTopologyAnyDInfinite<Cartesian>();
+            var grid = new Unbounded<Cartesian>();
             var result = grid.Normalize(coord);
             Assert.AreSame(coord, result);
         }
