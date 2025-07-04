@@ -7,6 +7,5 @@ namespace biomorphos.library.topology
     public interface IGridTopology<TCoord> where TCoord : ICoordinates
     {
         TCoord Normalize(TCoord coord);
-        IEnumerable<TCoord> GetRelated(TCoord origin);
     }
 }
