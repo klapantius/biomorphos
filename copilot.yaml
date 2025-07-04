@@ -22,17 +22,6 @@ project:
     - Output files should be written to the output folder under the project root unless otherwise specified.
 
 subprojects:
-  - name: prototype
-    purpose: >
-      A minimal prototype demonstrating the core simulation logic for a cell culture automation.
-      Implements a simple grid, cell state transitions, and HTML visualization of each iteration.
-    rules:
-      - The simulation grid must be square and configurable in size.
-      - Cell states: NonExistent, WillBeBorn, Alive, WillDie.
-      - The simulation must be reproducible given the same initial state.
-      - Generated HTML must visualize each iteration of the simulation.
-      - Only the four direct neighbors (up, down, left, right) are considered for state changes.
-      - No user interaction or external input is required.
   - name: library
     purpose: >
       Type definitions, core logic and calculations.
@@ -65,5 +54,24 @@ subprojects:
   - name: apps
     purpose: >
       All kinds of user interfaces, including web, desktop, and mobile applications.
+  - name: tests
+    purpose: >
+      Unit tests for the core library and applications.
+    rules:
+      - Use NUnit for unit testing.
+      - Each test should be independent and not rely on the state of other tests.
+      - Mock external dependencies where necessary to isolate tests.
+      - Ensure high code coverage for all core logic.
+  - name: prototype
+    purpose: >
+      A minimal prototype demonstrating the core simulation logic for a cell culture automation.
+      Implements a simple grid, cell state transitions, and HTML visualization of each iteration.
+    rules:
+      - The simulation grid must be square and configurable in size.
+      - Cell states: NonExistent, WillBeBorn, Alive, WillDie.
+      - The simulation must be reproducible given the same initial state.
+      - Generated HTML must visualize each iteration of the simulation.
+      - Only the four direct neighbors (up, down, left, right) are considered for state changes.
+      - No user interaction or external input is required.
 
 # End of copilot.yaml
