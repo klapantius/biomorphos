@@ -4,25 +4,25 @@ using biomorphos.library.topology;
 namespace biomorphos.library
 {
     /// <summary>
-    /// Interface for a grid that maintains a storage of cells, a grid topology, and a relationship topology.
+    /// Interface for a grid that maintains a storage of cells, a grid topology, and a relationship 
     /// All components use the same ICoordinates implementation.
     /// </summary>
-    public interface IGrid<TCoord> where TCoord : topology.ICoordinates
+    public interface IGrid<TCoord> where TCoord : ICoordinates
     {
         /// <summary>
         /// The storage for cells in the grid.
         /// </summary>
-        storage.IStorage<TCoord> Storage { get; }
+        IStorage<TCoord> Storage { get; }
 
         /// <summary>
         /// The topology of the grid (boundaries, normalization, etc).
         /// </summary>
-        topology.IGridTopology<TCoord> GridTopology { get; }
+        IGridTopology<TCoord> GridTopology { get; }
 
         /// <summary>
         /// The relationship topology (e.g., neighborhood) for cell connections.
         /// </summary>
-        topology.IRelationshipTopology<TCoord> RelationshipTopology { get; }
+        IRelationshipTopology<TCoord> RelationshipTopology { get; }
 
         /// <summary>
         /// An enumerable of all cells in the grid.
