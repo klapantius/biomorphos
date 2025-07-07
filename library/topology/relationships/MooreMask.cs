@@ -1,3 +1,5 @@
+using biomorphos.library.services;
+
 namespace biomorphos.library.topology.relationships
 {
     /// <summary>
@@ -10,9 +12,9 @@ namespace biomorphos.library.topology.relationships
         /// <summary>
         /// Initializes a new instance of the <see cref="MooreMask{TCoordinates}"/> class.
         /// </summary>
-        /// <param name="dimensions">The number of dimensions for the neighborhood.</param>
-        public MooreMask(int dimensions)
-            : base(BuildMooreMask(dimensions))
+        /// <param name="dimensionProvider">provides the number of dimensions for the neighborhood.</param>
+        public MooreMask(IDimensionProvider dimensionProvider)
+            : base(BuildMooreMask(dimensionProvider.Dimensions.Length))
         {
         }
 

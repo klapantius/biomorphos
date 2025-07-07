@@ -1,3 +1,4 @@
+using biomorphos.library.services;
 using biomorphos.library.topology;
 
 namespace biomorphos.library.storage
@@ -8,22 +9,22 @@ namespace biomorphos.library.storage
     /// </summary>
     public class DenseArrayStorage<TCoord> : IStorage<TCoord> where TCoord : ICoordinates
     {
-        private readonly int[] _sizes;
+        private readonly int[] _dimensions;
         private readonly ICell?[] _cells;
-        private readonly int _dimensions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DenseArrayStorage{TCoord}"/> class.
         /// </summary>
-        /// <param name="sizes">The size of the grid in each dimension (length = number of dimensions).</param>
-        public DenseArrayStorage(params int[] sizes)
+        /// <param name="dimensionProvider">The size of the grid in each dimension (length = number of dimensions).</param>
+        public DenseArrayStorage(IDimensionProvider dimensionProvider)
         {
-            if (sizes == null || sizes.Length == 0)
-                throw new ArgumentException("Sizes must be a non-empty array.", nameof(sizes));
-            _dimensions = sizes.Length;
-            _sizes = (int[])sizes.Clone();
+            if (dimensionProvider == null)
+            {
+                throw new ArgumentNullException(nameof(dimensionProvider), "Dimension provider cannot be null.");
+            }
+            _dimensions = (int[])dimensionProvider.Dimensions.Clone();
             int total = 1;
-            foreach (var s in sizes)
+            foreach (var s in _dimensions)
             {
                 if (s <= 0) throw new ArgumentException("All sizes must be positive.");
                 total *= s;
@@ -33,17 +34,17 @@ namespace biomorphos.library.storage
 
         internal int GetIndex(TCoord coord)
         {
-            if (coord.Dimensions != _dimensions)
-                throw new ArgumentException($"Coordinate dimensions ({coord.Dimensions}) do not match storage dimensions ({_dimensions}).");
+            if (coord.Dimensions != _dimensions.Length)
+                throw new ArgumentException($"Coordinate dimensions ({coord.Dimensions}) do not match storage dimensions ({_dimensions.Length}).");
             int index = 0;
             int stride = 1;
-            for (int d = 0; d < _dimensions; d++)
+            for (int d = 0; d < _dimensions.Length; d++)
             {
                 int v = coord[d];
-                if (v < 0 || v >= _sizes[d])
-                    throw new ArgumentOutOfRangeException($"Coordinate value {v} out of bounds for dimension {d} (size {_sizes[d]}).\nCoordinate: {coord}");
+                if (v < 0 || v >= _dimensions[d])
+                    throw new ArgumentOutOfRangeException($"Coordinate value {v} out of bounds for dimension {d} (size {_dimensions[d]}).\nCoordinate: {coord}");
                 index += v * stride;
-                stride *= _sizes[d];
+                stride *= _dimensions[d];
             }
             return index;
         }

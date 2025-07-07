@@ -21,7 +21,7 @@ namespace biomorphos.library.topology.relationships
         /// <param name="mask">A list of relative coordinate offsets (as int arrays) representing the neighborhood mask.</param>
         protected GenericMask(IEnumerable<int[]> mask)
         {
-            if (mask == null) throw new ArgumentNullException(nameof(mask));
+            ArgumentNullException.ThrowIfNull(mask);
             Mask = new List<int[]>(mask).AsReadOnly();
         }
 

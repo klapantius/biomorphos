@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using biomorphos.library.topology.relationships;
+using biomorphos.library.services;
 
 namespace biomorphos.tests.library.topology.relationships
 {
@@ -10,7 +11,7 @@ namespace biomorphos.tests.library.topology.relationships
         [Test]
         public void MooreMask_2D_Returns8Neighbors()
         {
-            var moore = new MooreMask<TestUtils.DummyCoordinates>(2);
+            var moore = new MooreMask<TestUtils.DummyCoordinates>(new DimensionProvider(3, 3));
             var origin = new TestUtils.DummyCoordinates(0, 0);
             var expected = new HashSet<TestUtils.DummyCoordinates>
             {
@@ -26,7 +27,7 @@ namespace biomorphos.tests.library.topology.relationships
         [Test]
         public void MooreMask_3D_Returns26Neighbors()
         {
-            var moore = new MooreMask<TestUtils.DummyCoordinates>(3);
+            var moore = new MooreMask<TestUtils.DummyCoordinates>(new DimensionProvider(3, 3, 3));
             var origin = new TestUtils.DummyCoordinates(1, 1, 1);
             var actual = new HashSet<TestUtils.DummyCoordinates>(moore.GetRelated(origin));
             Assert.AreEqual(26, actual.Count);
